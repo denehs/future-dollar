@@ -1,0 +1,40 @@
+{
+  "name": "future-dollar",
+  "version": "1.0.0",
+  "description": "A web-based financial planning tool that helps users understand the future value of their current spending decisions",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "serve": "python3 -m http.server 8000",
+    "dev": "python3 -m http.server 8000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/future-dollar.git"
+  },
+  "keywords": [
+    "finance",
+    "calculator",
+    "investment",
+    "financial-planning",
+    "web-app",
+    "javascript",
+    "tailwindcss"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/future-dollar/issues"
+  },
+  "homepage": "https://yourusername.github.io/future-dollar",
+  "devDependencies": {},
+  "dependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+} 
