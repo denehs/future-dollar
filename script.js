@@ -603,6 +603,7 @@ class TomorrowsDollar {
 document.addEventListener('DOMContentLoaded', () => {
     window.languageManager = new LanguageManager();
     window.tomorrowsDollar = new TomorrowsDollar();
+    window.easterEggManager = new EasterEggManager();
 });
 
 // Add some helpful utility functions for potential future enhancements
@@ -638,4 +639,70 @@ window.TomorrowsDollarUtils = {
         }
         return num.toFixed(2);
     }
-}; 
+};
+
+// Easter Egg Manager - Cat and Mouse Animation
+class EasterEggManager {
+    constructor() {
+        this.idleTimer = null;
+        this.idleTimeout = 7000; // 7 seconds
+        this.isLeftToRight = true; // Direction alternates
+        this.easterEggContainer = document.getElementById('easterEggContainer');
+        this.isAnimating = false;
+        
+        this.initEventListeners();
+        this.startIdleTimer();
+    }
+
+    initEventListeners() {
+        // Events that indicate user activity
+        const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click', 'input'];
+        
+        events.forEach(event => {
+            document.addEventListener(event, () => {
+                this.resetIdleTimer();
+            }, true);
+        });
+    }
+
+    startIdleTimer() {
+        this.idleTimer = setTimeout(() => {
+            this.triggerAnimation();
+        }, this.idleTimeout);
+    }
+
+    resetIdleTimer() {
+        // Clear existing timer
+        if (this.idleTimer) {
+            clearTimeout(this.idleTimer);
+        }
+        
+        // Don't start new timer if currently animating
+        if (!this.isAnimating) {
+            this.startIdleTimer();
+        }
+    }
+
+    triggerAnimation() {
+        if (this.isAnimating) return;
+        
+        this.isAnimating = true;
+        
+        // Clear any existing animation classes
+        this.easterEggContainer.classList.remove('animate-left-to-right', 'animate-right-to-left');
+        
+        // Add appropriate animation class based on direction
+        const animationClass = this.isLeftToRight ? 'animate-left-to-right' : 'animate-right-to-left';
+        this.easterEggContainer.classList.add(animationClass);
+        
+        // Toggle direction for next time
+        this.isLeftToRight = !this.isLeftToRight;
+        
+        // Reset after animation completes (3.5 seconds total with cat delay)
+        setTimeout(() => {
+            this.easterEggContainer.classList.remove(animationClass);
+            this.isAnimating = false;
+            this.startIdleTimer(); // Start timer for next animation
+        }, 3500);
+    }
+} 
