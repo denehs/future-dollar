@@ -140,10 +140,10 @@ class TomorrowsDollar {
             const bondsPercent = parseFloat(this.bondsPercent.value) || 0;
             const cashPercent = parseFloat(this.cashPercent.value) || 0;
             const targetYear = parseInt(this.targetYear.value) || new Date().getFullYear() + 20;
-            const inflationRate = parseFloat(this.inflationRate.value) || 3;
-            const stockReturn = parseFloat(this.stockReturn.value) || 7;
-            const bondReturn = parseFloat(this.bondReturn.value) || 4;
-            const cashReturn = parseFloat(this.cashReturn.value) || 1;
+            const inflationRate = this.inflationRate.value === '' || isNaN(parseFloat(this.inflationRate.value)) ? 3 : parseFloat(this.inflationRate.value);
+            const stockReturn = this.stockReturn.value === '' || isNaN(parseFloat(this.stockReturn.value)) ? 7 : parseFloat(this.stockReturn.value);
+            const bondReturn = this.bondReturn.value === '' || isNaN(parseFloat(this.bondReturn.value)) ? 4 : parseFloat(this.bondReturn.value);
+            const cashReturn = this.cashReturn.value === '' || isNaN(parseFloat(this.cashReturn.value)) ? 1 : parseFloat(this.cashReturn.value);
 
             // Calculate years
             const currentYear = new Date().getFullYear();
