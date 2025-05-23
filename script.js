@@ -4,6 +4,7 @@ class TomorrowsDollar {
         this.initializeElements();
         this.setDefaults();
         this.bindEvents();
+        this.adjustCashAllocation();
         this.calculate();
     }
 
@@ -18,6 +19,11 @@ class TomorrowsDollar {
         this.stockReturn = document.getElementById('stockReturn');
         this.bondReturn = document.getElementById('bondReturn');
         this.cashReturn = document.getElementById('cashReturn');
+
+        // Slider elements
+        this.stocksSlider = document.getElementById('stocksSlider');
+        this.bondsSlider = document.getElementById('bondsSlider');
+        this.cashSlider = document.getElementById('cashSlider');
 
         // UI elements
         this.advancedToggle = document.getElementById('advancedToggle');
@@ -47,9 +53,6 @@ class TomorrowsDollar {
         // Input event listeners for real-time updates
         const inputs = [
             this.spendingAmount,
-            this.stocksPercent,
-            this.bondsPercent,
-            this.cashPercent,
             this.targetYear,
             this.inflationRate,
             this.stockReturn,
@@ -64,16 +67,48 @@ class TomorrowsDollar {
             });
         });
 
+        // Stocks slider and input synchronization
+        this.stocksSlider.addEventListener('input', () => {
+            this.stocksPercent.value = this.stocksSlider.value;
+            this.adjustCashAllocation();
+            this.validateInputs();
+            this.calculate();
+        });
+
+        this.stocksPercent.addEventListener('input', () => {
+            const value = Math.max(0, Math.min(100, parseFloat(this.stocksPercent.value) || 0));
+            this.stocksPercent.value = value;
+            this.stocksSlider.value = value;
+            this.adjustCashAllocation();
+            this.validateInputs();
+            this.calculate();
+        });
+
+        // Bonds slider and input synchronization
+        this.bondsSlider.addEventListener('input', () => {
+            this.bondsPercent.value = this.bondsSlider.value;
+            this.adjustCashAllocation();
+            this.validateInputs();
+            this.calculate();
+        });
+
+        this.bondsPercent.addEventListener('input', () => {
+            const value = Math.max(0, Math.min(100, parseFloat(this.bondsPercent.value) || 0));
+            this.bondsPercent.value = value;
+            this.bondsSlider.value = value;
+            this.adjustCashAllocation();
+            this.validateInputs();
+            this.calculate();
+        });
+
+        // Cash is read-only but we still sync the slider for visual representation
+        this.cashPercent.addEventListener('change', () => {
+            this.cashSlider.value = this.cashPercent.value;
+        });
+
         // Advanced section toggle
         this.advancedToggle.addEventListener('click', () => {
             this.toggleAdvancedSection();
-        });
-
-        // Asset allocation validation
-        [this.stocksPercent, this.bondsPercent, this.cashPercent].forEach(input => {
-            input.addEventListener('input', () => {
-                this.validateAssetAllocation();
-            });
         });
     }
 
@@ -81,9 +116,6 @@ class TomorrowsDollar {
         // Ensure all inputs have valid numeric values
         const inputs = [
             this.spendingAmount,
-            this.stocksPercent,
-            this.bondsPercent,
-            this.cashPercent,
             this.targetYear,
             this.inflationRate,
             this.stockReturn,
@@ -99,6 +131,35 @@ class TomorrowsDollar {
                 input.classList.remove('border-red-500');
             }
         });
+
+        this.adjustCashAllocation();
+    }
+
+    adjustCashAllocation() {
+        const stocks = parseFloat(this.stocksPercent.value) || 0;
+        const bonds = parseFloat(this.bondsPercent.value) || 0;
+        
+        // If stocks + bonds > 100, we need to adjust them proportionally
+        if (stocks + bonds > 100) {
+            const total = stocks + bonds;
+            const adjustedStocks = (stocks / total) * 100;
+            const adjustedBonds = (bonds / total) * 100;
+            
+            this.stocksPercent.value = adjustedStocks.toFixed(1);
+            this.stocksSlider.value = Math.round(adjustedStocks);
+            this.bondsPercent.value = adjustedBonds.toFixed(1);
+            this.bondsSlider.value = Math.round(adjustedBonds);
+            
+            this.cashPercent.value = 0;
+            this.cashSlider.value = 0;
+        } else {
+            // Normal case: cash = 100 - stocks - bonds
+            const cash = 100 - stocks - bonds;
+            this.cashPercent.value = Math.max(0, cash).toFixed(1);
+            this.cashSlider.value = Math.max(0, Math.round(cash));
+        }
+        
+        this.validateAssetAllocation();
     }
 
     validateAssetAllocation() {
@@ -246,8 +307,11 @@ class TomorrowsDollar {
     reset() {
         this.spendingAmount.value = 100;
         this.stocksPercent.value = 75;
+        this.stocksSlider.value = 75;
         this.bondsPercent.value = 15;
+        this.bondsSlider.value = 15;
         this.cashPercent.value = 10;
+        this.cashSlider.value = 10;
         this.targetYear.value = new Date().getFullYear() + 20;
         this.inflationRate.value = 3;
         this.stockReturn.value = 7;
