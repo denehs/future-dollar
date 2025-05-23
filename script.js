@@ -4,7 +4,7 @@ class TomorrowsDollar {
         this.initializeElements();
         this.setDefaults();
         this.bindEvents();
-        this.adjustCashAllocation();
+        this.adjustAllocationFromStocks();
         this.calculate();
     }
 
@@ -70,7 +70,7 @@ class TomorrowsDollar {
         // Stocks slider and input synchronization
         this.stocksSlider.addEventListener('input', () => {
             this.stocksPercent.value = this.stocksSlider.value;
-            this.adjustCashAllocation();
+            this.adjustAllocationFromStocks();
             this.validateInputs();
             this.calculate();
         });
@@ -79,7 +79,7 @@ class TomorrowsDollar {
             const value = Math.max(0, Math.min(100, parseFloat(this.stocksPercent.value) || 0));
             this.stocksPercent.value = value;
             this.stocksSlider.value = value;
-            this.adjustCashAllocation();
+            this.adjustAllocationFromStocks();
             this.validateInputs();
             this.calculate();
         });
@@ -87,7 +87,7 @@ class TomorrowsDollar {
         // Bonds slider and input synchronization
         this.bondsSlider.addEventListener('input', () => {
             this.bondsPercent.value = this.bondsSlider.value;
-            this.adjustCashAllocation();
+            this.adjustAllocationFromBonds();
             this.validateInputs();
             this.calculate();
         });
@@ -96,7 +96,7 @@ class TomorrowsDollar {
             const value = Math.max(0, Math.min(100, parseFloat(this.bondsPercent.value) || 0));
             this.bondsPercent.value = value;
             this.bondsSlider.value = value;
-            this.adjustCashAllocation();
+            this.adjustAllocationFromBonds();
             this.validateInputs();
             this.calculate();
         });
@@ -132,24 +132,19 @@ class TomorrowsDollar {
             }
         });
 
-        this.adjustCashAllocation();
+        this.adjustAllocationFromStocks();
     }
 
-    adjustCashAllocation() {
+    adjustAllocationFromStocks() {
         const stocks = parseFloat(this.stocksPercent.value) || 0;
         const bonds = parseFloat(this.bondsPercent.value) || 0;
         
-        // If stocks + bonds > 100, we need to adjust them proportionally
+        // Respect the user's stocks input, adjust bonds if necessary
         if (stocks + bonds > 100) {
-            const total = stocks + bonds;
-            const adjustedStocks = (stocks / total) * 100;
-            const adjustedBonds = (bonds / total) * 100;
-            
-            this.stocksPercent.value = adjustedStocks.toFixed(1);
-            this.stocksSlider.value = Math.round(adjustedStocks);
-            this.bondsPercent.value = adjustedBonds.toFixed(1);
-            this.bondsSlider.value = Math.round(adjustedBonds);
-            
+            // Reduce bonds to fit the available space
+            const availableForBonds = 100 - stocks;
+            this.bondsPercent.value = Math.max(0, availableForBonds).toFixed(1);
+            this.bondsSlider.value = Math.max(0, Math.round(availableForBonds));
             this.cashPercent.value = 0;
             this.cashSlider.value = 0;
         } else {
@@ -320,6 +315,28 @@ class TomorrowsDollar {
         
         this.validateAssetAllocation();
         this.calculate();
+    }
+
+    adjustAllocationFromBonds() {
+        const stocks = parseFloat(this.stocksPercent.value) || 0;
+        const bonds = parseFloat(this.bondsPercent.value) || 0;
+        
+        // Respect the user's bonds input, adjust stocks if necessary
+        if (stocks + bonds > 100) {
+            // Reduce stocks to fit the available space
+            const availableForStocks = 100 - bonds;
+            this.stocksPercent.value = Math.max(0, availableForStocks).toFixed(1);
+            this.stocksSlider.value = Math.max(0, Math.round(availableForStocks));
+            this.cashPercent.value = 0;
+            this.cashSlider.value = 0;
+        } else {
+            // Normal case: cash = 100 - stocks - bonds
+            const cash = 100 - stocks - bonds;
+            this.cashPercent.value = Math.max(0, cash).toFixed(1);
+            this.cashSlider.value = Math.max(0, Math.round(cash));
+        }
+        
+        this.validateAssetAllocation();
     }
 }
 
