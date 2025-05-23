@@ -19,6 +19,7 @@ const translations = {
         'bond-return': "Annual Bond Return (%)",
         'cash-return': "Annual Cash Return (%)",
         'reset-defaults': "Reset to Defaults",
+        'reset-all-defaults': "Reset All to Defaults",
         'future-value-calculation': "Future Value Calculation",
         'if-you-spend': "If you spend",
         'today': "today...",
@@ -56,6 +57,7 @@ const translations = {
         'bond-return': "年債券回報率 (%)",
         'cash-return': "年現金回報率 (%)",
         'reset-defaults': "重設為預設值",
+        'reset-all-defaults': "重設所有為預設值",
         'future-value-calculation': "未來價值計算",
         'if-you-spend': "如果您今天花費",
         'today': "...",
@@ -139,6 +141,7 @@ class LanguageManager {
 class TomorrowsDollar {
     constructor() {
         this.initializeElements();
+        this.loadUserPreferences();
         this.setDefaults();
         this.bindEvents();
         this.adjustAllocationFromStocks();
@@ -168,6 +171,7 @@ class TomorrowsDollar {
         this.advancedIcon = document.getElementById('advancedIcon');
         this.advancedSection = document.getElementById('advancedSection');
         this.resetAssumptions = document.getElementById('resetAssumptions');
+        this.resetAll = document.getElementById('resetAll');
         this.allocationError = document.getElementById('allocationError');
         this.totalAllocation = document.getElementById('totalAllocation');
 
@@ -182,11 +186,71 @@ class TomorrowsDollar {
         this.inflationAssumption = document.getElementById('inflationAssumption');
     }
 
+    loadUserPreferences() {
+        // Load saved preferences from localStorage
+        const savedPrefs = localStorage.getItem('tomorrowsDollarPrefs');
+        if (savedPrefs) {
+            try {
+                this.userPreferences = JSON.parse(savedPrefs);
+            } catch (e) {
+                this.userPreferences = {};
+            }
+        } else {
+            this.userPreferences = {};
+        }
+    }
+
+    saveUserPreferences() {
+        // Save current values to localStorage
+        this.userPreferences = {
+            spendingAmount: parseFloat(this.spendingAmount.value) || 100,
+            stocksPercent: parseFloat(this.stocksPercent.value) || 75,
+            bondsPercent: parseFloat(this.bondsPercent.value) || 15,
+            cashPercent: parseFloat(this.cashPercent.value) || 10,
+            inflationRate: parseFloat(this.inflationRate.value) || 3,
+            stockReturn: parseFloat(this.stockReturn.value) || 7,
+            bondReturn: parseFloat(this.bondReturn.value) || 4,
+            cashReturn: parseFloat(this.cashReturn.value) || 1,
+            targetYear: parseInt(this.targetYear.value) || new Date().getFullYear() + 20
+        };
+        
+        localStorage.setItem('tomorrowsDollarPrefs', JSON.stringify(this.userPreferences));
+    }
+
+    applySavedPreferences() {
+        // Apply saved preferences if they exist
+        if (Object.keys(this.userPreferences).length > 0) {
+            this.spendingAmount.value = this.userPreferences.spendingAmount || 100;
+            this.stocksPercent.value = this.userPreferences.stocksPercent || 75;
+            this.stocksSlider.value = this.userPreferences.stocksPercent || 75;
+            this.bondsPercent.value = this.userPreferences.bondsPercent || 15;
+            this.bondsSlider.value = this.userPreferences.bondsPercent || 15;
+            this.cashPercent.value = this.userPreferences.cashPercent || 10;
+            this.cashSlider.value = this.userPreferences.cashPercent || 10;
+            this.inflationRate.value = this.userPreferences.inflationRate || 3;
+            this.stockReturn.value = this.userPreferences.stockReturn || 7;
+            this.bondReturn.value = this.userPreferences.bondReturn || 4;
+            this.cashReturn.value = this.userPreferences.cashReturn || 1;
+            
+            // Handle target year with fallback to current year + 20
+            const savedTargetYear = this.userPreferences.targetYear || new Date().getFullYear() + 20;
+            this.targetYear.value = savedTargetYear;
+            this.targetYearSlider.value = savedTargetYear;
+        }
+    }
+
     setDefaults() {
         // Set default target year to current year + 20
         const currentYear = new Date().getFullYear();
-        this.targetYear.value = currentYear + 20;
-        this.targetYearSlider.value = currentYear + 20;
+        
+        // Apply saved preferences or use defaults
+        this.applySavedPreferences();
+        
+        // Ensure target year is set if not in preferences
+        if (!this.targetYear.value) {
+            this.targetYear.value = currentYear + 20;
+            this.targetYearSlider.value = currentYear + 20;
+        }
         
         // Set minimum year to current year for both input and slider
         this.targetYear.min = currentYear;
@@ -207,6 +271,7 @@ class TomorrowsDollar {
             input.addEventListener('input', () => {
                 this.validateInputs();
                 this.calculate();
+                this.saveUserPreferences();
             });
         });
 
@@ -215,6 +280,7 @@ class TomorrowsDollar {
             this.targetYear.value = this.targetYearSlider.value;
             this.validateInputs();
             this.calculate();
+            this.saveUserPreferences();
         });
 
         this.targetYear.addEventListener('input', () => {
@@ -224,6 +290,7 @@ class TomorrowsDollar {
             this.targetYearSlider.value = value;
             this.validateInputs();
             this.calculate();
+            this.saveUserPreferences();
         });
 
         // Stocks slider and input synchronization
@@ -232,6 +299,7 @@ class TomorrowsDollar {
             this.adjustAllocationFromStocks();
             this.validateInputs();
             this.calculate();
+            this.saveUserPreferences();
         });
 
         this.stocksPercent.addEventListener('input', () => {
@@ -241,6 +309,7 @@ class TomorrowsDollar {
             this.adjustAllocationFromStocks();
             this.validateInputs();
             this.calculate();
+            this.saveUserPreferences();
         });
 
         // Bonds slider and input synchronization
@@ -249,6 +318,7 @@ class TomorrowsDollar {
             this.adjustAllocationFromBonds();
             this.validateInputs();
             this.calculate();
+            this.saveUserPreferences();
         });
 
         this.bondsPercent.addEventListener('input', () => {
@@ -258,6 +328,7 @@ class TomorrowsDollar {
             this.adjustAllocationFromBonds();
             this.validateInputs();
             this.calculate();
+            this.saveUserPreferences();
         });
 
         // Cash is read-only but we still sync the slider for visual representation
@@ -273,6 +344,11 @@ class TomorrowsDollar {
         // Reset assumptions button
         this.resetAssumptions.addEventListener('click', () => {
             this.resetAssumptionsToDefaults();
+        });
+
+        // Reset all button
+        this.resetAll.addEventListener('click', () => {
+            this.reset();
         });
     }
 
@@ -361,6 +437,7 @@ class TomorrowsDollar {
         
         // Recalculate with new values
         this.calculate();
+        this.saveUserPreferences();
     }
 
     calculate() {
@@ -475,6 +552,11 @@ class TomorrowsDollar {
 
     // Method to reset to defaults
     reset() {
+        // Clear saved preferences
+        localStorage.removeItem('tomorrowsDollarPrefs');
+        this.userPreferences = {};
+        
+        // Reset all values to defaults
         this.spendingAmount.value = 100;
         this.stocksPercent.value = 75;
         this.stocksSlider.value = 75;
@@ -491,6 +573,7 @@ class TomorrowsDollar {
         
         this.validateAssetAllocation();
         this.calculate();
+        this.saveUserPreferences();
     }
 
     adjustAllocationFromBonds() {
