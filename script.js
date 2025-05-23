@@ -24,6 +24,7 @@ class TomorrowsDollar {
         this.stocksSlider = document.getElementById('stocksSlider');
         this.bondsSlider = document.getElementById('bondsSlider');
         this.cashSlider = document.getElementById('cashSlider');
+        this.targetYearSlider = document.getElementById('targetYearSlider');
 
         // UI elements
         this.advancedToggle = document.getElementById('advancedToggle');
@@ -47,13 +48,13 @@ class TomorrowsDollar {
         // Set default target year to current year + 20
         const currentYear = new Date().getFullYear();
         this.targetYear.value = currentYear + 20;
+        this.targetYearSlider.value = currentYear + 20;
     }
 
     bindEvents() {
         // Input event listeners for real-time updates
         const inputs = [
             this.spendingAmount,
-            this.targetYear,
             this.inflationRate,
             this.stockReturn,
             this.bondReturn,
@@ -65,6 +66,21 @@ class TomorrowsDollar {
                 this.validateInputs();
                 this.calculate();
             });
+        });
+
+        // Target year slider and input synchronization
+        this.targetYearSlider.addEventListener('input', () => {
+            this.targetYear.value = this.targetYearSlider.value;
+            this.validateInputs();
+            this.calculate();
+        });
+
+        this.targetYear.addEventListener('input', () => {
+            const value = Math.max(2024, Math.min(2080, parseInt(this.targetYear.value) || new Date().getFullYear() + 20));
+            this.targetYear.value = value;
+            this.targetYearSlider.value = value;
+            this.validateInputs();
+            this.calculate();
         });
 
         // Stocks slider and input synchronization
@@ -308,6 +324,7 @@ class TomorrowsDollar {
         this.cashPercent.value = 10;
         this.cashSlider.value = 10;
         this.targetYear.value = new Date().getFullYear() + 20;
+        this.targetYearSlider.value = new Date().getFullYear() + 20;
         this.inflationRate.value = 3;
         this.stockReturn.value = 7;
         this.bondReturn.value = 4;
