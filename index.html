@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-US">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -134,9 +134,17 @@
 <body class="bg-gray-50 min-h-screen">
     <div class="container mx-auto px-4 py-8 max-w-4xl">
         <!-- Header -->
-        <header class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-900 mb-2">Tomorrow's Dollar</h1>
-            <p class="text-lg text-gray-600">Understand the future value of your spending decisions</p>
+        <header class="text-center mb-8 relative">
+            <!-- Language Selector -->
+            <div class="absolute top-0 right-0">
+                <select id="languageSelector" class="px-3 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+                    <option value="en">English (US)</option>
+                    <option value="zh-TW">繁體中文(台灣)</option>
+                </select>
+            </div>
+            
+            <h1 class="text-4xl font-bold text-gray-900 mb-2" data-translate="title">Tomorrow's Dollar</h1>
+            <p class="text-lg text-gray-600" data-translate="subtitle">Understand the future value of your spending decisions</p>
         </header>
 
         <!-- Main Application -->
@@ -147,7 +155,7 @@
                 <div class="space-y-6">
                     <!-- Spending Amount (Prominent) -->
                     <div class="bg-blue-50 border-2 border-blue-200 rounded-lg p-4">
-                        <label for="spendingAmount" class="block text-lg font-medium text-gray-900 mb-2">
+                        <label for="spendingAmount" class="block text-lg font-medium text-gray-900 mb-2" data-translate="spending-amount">
                             Spending Amount (USD)
                         </label>
                         <div class="relative">
@@ -166,12 +174,12 @@
 
                     <!-- Asset Allocation -->
                     <div>
-                        <h3 class="text-lg font-medium text-gray-900 mb-3">Asset Allocation</h3>
+                        <h3 class="text-lg font-medium text-gray-900 mb-3" data-translate="asset-allocation">Asset Allocation</h3>
                         <div class="space-y-4">
                             <!-- Stocks -->
                             <div>
                                 <div class="flex justify-between items-center mb-2">
-                                    <label for="stocksPercent" class="text-sm font-medium text-gray-700">
+                                    <label for="stocksPercent" class="text-sm font-medium text-gray-700" data-translate="stocks">
                                         Stocks (%)
                                     </label>
                                     <input 
@@ -198,7 +206,7 @@
                             <!-- Bonds -->
                             <div>
                                 <div class="flex justify-between items-center mb-2">
-                                    <label for="bondsPercent" class="text-sm font-medium text-gray-700">
+                                    <label for="bondsPercent" class="text-sm font-medium text-gray-700" data-translate="bonds">
                                         Bonds (%)
                                     </label>
                                     <input 
@@ -226,7 +234,7 @@
                             <div>
                                 <div class="flex justify-between items-center mb-2">
                                     <label for="cashPercent" class="text-sm font-medium text-gray-700">
-                                        Cash (%) <span class="text-xs text-gray-500">- Auto adjusts</span>
+                                        <span data-translate="cash">Cash (%)</span> <span class="text-xs text-gray-500" data-translate="auto-adjusts">- Auto adjusts</span>
                                     </label>
                                     <input 
                                         type="number" 
@@ -251,11 +259,11 @@
                                 >
                             </div>
                             
-                            <div id="allocationError" class="text-red-600 text-sm hidden">
+                            <div id="allocationError" class="text-red-600 text-sm hidden" data-translate="allocation-error">
                                 Asset allocation must sum to 100%
                             </div>
                             <div id="allocationSum" class="text-sm text-gray-600">
-                                Total: <span id="totalAllocation">100</span>%
+                                <span data-translate="total">Total:</span> <span id="totalAllocation">100</span>%
                             </div>
                         </div>
                     </div>
@@ -263,7 +271,7 @@
                     <!-- Target Year -->
                     <div>
                         <div class="flex justify-between items-center mb-2">
-                            <label for="targetYear" class="text-sm font-medium text-gray-700">
+                            <label for="targetYear" class="text-sm font-medium text-gray-700" data-translate="target-year">
                                 Target Year
                             </label>
                             <input 
@@ -293,7 +301,7 @@
                             id="advancedToggle"
                             class="w-full px-4 py-3 text-left text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 flex justify-between items-center"
                         >
-                            <span>Advanced Assumptions</span>
+                            <span data-translate="advanced-assumptions">Advanced Assumptions</span>
                             <svg id="advancedIcon" class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
@@ -301,7 +309,7 @@
                         
                         <div id="advancedSection" class="hidden p-4 space-y-3 border-t border-gray-200">
                             <div>
-                                <label for="inflationRate" class="block text-sm font-medium text-gray-700 mb-1">
+                                <label for="inflationRate" class="block text-sm font-medium text-gray-700 mb-1" data-translate="inflation-rate">
                                     Annual Inflation Rate (%)
                                 </label>
                                 <input 
@@ -315,7 +323,7 @@
                                 >
                             </div>
                             <div>
-                                <label for="stockReturn" class="block text-sm font-medium text-gray-700 mb-1">
+                                <label for="stockReturn" class="block text-sm font-medium text-gray-700 mb-1" data-translate="stock-return">
                                     Annual Stock Return (%)
                                 </label>
                                 <input 
@@ -329,7 +337,7 @@
                                 >
                             </div>
                             <div>
-                                <label for="bondReturn" class="block text-sm font-medium text-gray-700 mb-1">
+                                <label for="bondReturn" class="block text-sm font-medium text-gray-700 mb-1" data-translate="bond-return">
                                     Annual Bond Return (%)
                                 </label>
                                 <input 
@@ -343,7 +351,7 @@
                                 >
                             </div>
                             <div>
-                                <label for="cashReturn" class="block text-sm font-medium text-gray-700 mb-1">
+                                <label for="cashReturn" class="block text-sm font-medium text-gray-700 mb-1" data-translate="cash-return">
                                     Annual Cash Return (%)
                                 </label>
                                 <input 
@@ -363,6 +371,7 @@
                                     type="button" 
                                     id="resetAssumptions"
                                     class="w-full px-3 py-2 text-sm text-gray-600 bg-gray-50 border border-gray-300 rounded-md hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
+                                    data-translate="reset-defaults"
                                 >
                                     Reset to Defaults
                                 </button>
@@ -373,26 +382,26 @@
 
                 <!-- Right Column - Results -->
                 <div class="space-y-6">
-                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Future Value Calculation</h2>
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4" data-translate="future-value-calculation">Future Value Calculation</h2>
                     
                     <!-- Results Display -->
                     <div id="resultsSection" class="space-y-4">
                         <div class="bg-green-50 border border-green-200 rounded-lg p-4">
                             <p class="text-gray-700 mb-4">
-                                If you spend <strong id="displayAmount">$100</strong> today...
+                                <span data-translate="if-you-spend">If you spend</span> <strong id="displayAmount">$100</strong> <span data-translate="today">today...</span>
                             </p>
                             <p class="text-gray-700 mb-4">
-                                ...in the year <strong id="displayYear">2044</strong> (<strong id="displayYears">20</strong> years from now), that amount could have grown to approximately:
+                                <span data-translate="in-the-year">...in the year</span> <strong id="displayYear">2044</strong> (<strong id="displayYears">20</strong> <span data-translate="years-from-now">years from now), that amount could have grown to approximately:</span>
                             </p>
                             
                             <div class="space-y-3">
                                 <div class="bg-white rounded-lg p-3 border">
-                                    <div class="text-sm text-gray-600 mb-1">Opportunity Cost (in today's dollars, after inflation)</div>
+                                    <div class="text-sm text-gray-600 mb-1" data-translate="opportunity-cost-label">Opportunity Cost (in today's dollars, after inflation)</div>
                                     <div class="text-2xl font-bold text-blue-600" id="realValue">$176.30</div>
                                 </div>
                                 
                                 <div class="bg-white rounded-lg p-3 border">
-                                    <div class="text-sm text-gray-600 mb-1">Nominal Future Value (without considering inflation)</div>
+                                    <div class="text-sm text-gray-600 mb-1" data-translate="nominal-value-label">Nominal Future Value (without considering inflation)</div>
                                     <div class="text-2xl font-bold text-green-600" id="nominalValue">$317.22</div>
                                 </div>
                             </div>
@@ -400,20 +409,20 @@
 
                         <!-- Explanation -->
                         <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                            <h4 class="font-medium text-gray-900 mb-2">Understanding Your Results</h4>
+                            <h4 class="font-medium text-gray-900 mb-2" data-translate="understanding-results">Understanding Your Results</h4>
                             <ul class="text-sm text-gray-700 space-y-1">
-                                <li><strong>Opportunity Cost:</strong> What you're potentially giving up by spending this money today instead of investing it, shown in today's purchasing power after accounting for inflation.</li>
-                                <li><strong>Nominal Value:</strong> The raw dollar amount your investment could grow to, not accounting for inflation.</li>
+                                <li><strong data-translate="opportunity-cost-explanation-label">Opportunity Cost:</strong> <span data-translate="opportunity-cost-explanation">What you're potentially giving up by spending this money today instead of investing it, shown in today's purchasing power after accounting for inflation.</span></li>
+                                <li><strong data-translate="nominal-value-explanation-label">Nominal Value:</strong> <span data-translate="nominal-value-explanation">The raw dollar amount your investment could grow to, not accounting for inflation.</span></li>
                             </ul>
                         </div>
 
                         <!-- Investment Summary -->
                         <div class="bg-gray-50 rounded-lg p-4">
-                            <h4 class="font-medium text-gray-900 mb-2">Investment Summary</h4>
+                            <h4 class="font-medium text-gray-900 mb-2" data-translate="investment-summary">Investment Summary</h4>
                             <div class="text-sm text-gray-700 space-y-1">
-                                <div>Weighted Average Annual Return: <span id="weightedReturn" class="font-medium">5.95%</span></div>
-                                <div>Time Horizon: <span id="timeHorizon" class="font-medium">20 years</span></div>
-                                <div>Inflation Assumption: <span id="inflationAssumption" class="font-medium">3.0%</span></div>
+                                <div><span data-translate="weighted-average-return">Weighted Average Annual Return:</span> <span id="weightedReturn" class="font-medium">5.95%</span></div>
+                                <div><span data-translate="time-horizon">Time Horizon:</span> <span id="timeHorizon" class="font-medium">20 years</span></div>
+                                <div><span data-translate="inflation-assumption">Inflation Assumption:</span> <span id="inflationAssumption" class="font-medium">3.0%</span></div>
                             </div>
                         </div>
                     </div>
@@ -423,7 +432,7 @@
 
         <!-- Footer -->
         <footer class="text-center mt-8 text-sm text-gray-600">
-            <p>This tool provides educational estimates only. Past performance does not guarantee future results. Consult a financial advisor for personalized advice.</p>
+            <p data-translate="disclaimer">This tool provides educational estimates only. Past performance does not guarantee future results. Consult a financial advisor for personalized advice.</p>
         </footer>
     </div>
 
