@@ -1,3 +1,121 @@
+// Translation system
+const translations = {
+    'en': {
+        'page-title': "Tomorrow's Dollar - Financial Planning Tool",
+        'title': "Tomorrow's Dollar",
+        'subtitle': "Understand the future value of your spending decisions",
+        'spending-amount': "Spending Amount (USD)",
+        'asset-allocation': "Asset Allocation",
+        'stocks': "Stocks (%)",
+        'bonds': "Bonds (%)",
+        'cash': "Cash (%)",
+        'auto-adjusts': "- Auto adjusts",
+        'allocation-error': "Asset allocation must sum to 100%",
+        'total': "Total:",
+        'target-year': "Target Year",
+        'advanced-assumptions': "Advanced Assumptions",
+        'inflation-rate': "Annual Inflation Rate (%)",
+        'stock-return': "Annual Stock Return (%)",
+        'bond-return': "Annual Bond Return (%)",
+        'cash-return': "Annual Cash Return (%)",
+        'reset-defaults': "Reset to Defaults",
+        'future-value-calculation': "Future Value Calculation",
+        'if-you-spend': "If you spend",
+        'today': "today...",
+        'in-the-year': "...in the year",
+        'years-from-now': "years from now), that amount could have grown to approximately:",
+        'opportunity-cost-label': "Opportunity Cost (in today's dollars, after inflation)",
+        'nominal-value-label': "Nominal Future Value (without considering inflation)",
+        'understanding-results': "Understanding Your Results",
+        'opportunity-cost-explanation-label': "Opportunity Cost:",
+        'opportunity-cost-explanation': "What you're potentially giving up by spending this money today instead of investing it, shown in today's purchasing power after accounting for inflation.",
+        'nominal-value-explanation-label': "Nominal Value:",
+        'nominal-value-explanation': "The raw dollar amount your investment could grow to, not accounting for inflation.",
+        'investment-summary': "Investment Summary",
+        'weighted-average-return': "Weighted Average Annual Return:",
+        'time-horizon': "Time Horizon:",
+        'inflation-assumption': "Inflation Assumption:",
+        'disclaimer': "This tool provides educational estimates only. Past performance does not guarantee future results. Consult a financial advisor for personalized advice."
+    },
+    'zh-TW': {
+        'page-title': "明日美元 - 財務規劃工具",
+        'title': "明日美元",
+        'subtitle': "了解您消費決策的未來價值",
+        'spending-amount': "消費金額 (美元)",
+        'asset-allocation': "資產配置",
+        'stocks': "股票 (%)",
+        'bonds': "債券 (%)",
+        'cash': "現金 (%)",
+        'auto-adjusts': "- 自動調整",
+        'allocation-error': "資產配置必須總計為 100%",
+        'total': "總計:",
+        'target-year': "目標年份",
+        'advanced-assumptions': "進階假設",
+        'inflation-rate': "年通脹率 (%)",
+        'stock-return': "年股票回報率 (%)",
+        'bond-return': "年債券回報率 (%)",
+        'cash-return': "年現金回報率 (%)",
+        'reset-defaults': "重設為預設值",
+        'future-value-calculation': "未來價值計算",
+        'if-you-spend': "如果您今天花費",
+        'today': "...",
+        'in-the-year': "...在",
+        'years-from-now': "年後），該金額可能會增長到約:",
+        'opportunity-cost-label': "機會成本（以今天的購買力計算，扣除通脹後）",
+        'nominal-value-label': "名義未來價值（不考慮通脹）",
+        'understanding-results': "理解您的結果",
+        'opportunity-cost-explanation-label': "機會成本:",
+        'opportunity-cost-explanation': "您今天花費這筆錢而不是投資它可能放棄的價值，以今天的購買力顯示，已考慮通脹影響。",
+        'nominal-value-explanation-label': "名義價值:",
+        'nominal-value-explanation': "您的投資可能增長到的原始美元金額，不考慮通脹。",
+        'investment-summary': "投資摘要",
+        'weighted-average-return': "加權平均年回報率:",
+        'time-horizon': "投資期限:",
+        'inflation-assumption': "通脹假設:",
+        'disclaimer': "此工具僅提供教育性估算。過往表現不保證未來結果。請諮詢財務顧問以獲得個人化建議。"
+    }
+};
+
+// Language management
+class LanguageManager {
+    constructor() {
+        this.currentLanguage = localStorage.getItem('language') || 'en';
+        this.initLanguageSelector();
+        this.applyTranslations();
+    }
+
+    initLanguageSelector() {
+        this.languageSelector = document.getElementById('languageSelector');
+        this.languageSelector.value = this.currentLanguage;
+        this.languageSelector.addEventListener('change', (e) => {
+            this.setLanguage(e.target.value);
+        });
+    }
+
+    setLanguage(lang) {
+        this.currentLanguage = lang;
+        localStorage.setItem('language', lang);
+        this.applyTranslations();
+        
+        // Update page language attribute
+        document.documentElement.lang = lang === 'zh-TW' ? 'zh-TW' : 'en-US';
+    }
+
+    applyTranslations() {
+        const elements = document.querySelectorAll('[data-translate]');
+        elements.forEach(element => {
+            const key = element.getAttribute('data-translate');
+            const translation = translations[this.currentLanguage][key];
+            if (translation) {
+                element.textContent = translation;
+            }
+        });
+        
+        // Update page title
+        document.title = translations[this.currentLanguage]['page-title'];
+    }
+}
+
 // Application state and DOM elements
 class TomorrowsDollar {
     constructor() {
@@ -381,6 +499,7 @@ class TomorrowsDollar {
 
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    window.languageManager = new LanguageManager();
     window.tomorrowsDollar = new TomorrowsDollar();
 });
 
