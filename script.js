@@ -30,6 +30,7 @@ class TomorrowsDollar {
         this.advancedToggle = document.getElementById('advancedToggle');
         this.advancedIcon = document.getElementById('advancedIcon');
         this.advancedSection = document.getElementById('advancedSection');
+        this.resetAssumptions = document.getElementById('resetAssumptions');
         this.allocationError = document.getElementById('allocationError');
         this.totalAllocation = document.getElementById('totalAllocation');
 
@@ -131,6 +132,11 @@ class TomorrowsDollar {
         this.advancedToggle.addEventListener('click', () => {
             this.toggleAdvancedSection();
         });
+
+        // Reset assumptions button
+        this.resetAssumptions.addEventListener('click', () => {
+            this.resetAssumptionsToDefaults();
+        });
     }
 
     validateInputs() {
@@ -207,6 +213,17 @@ class TomorrowsDollar {
             this.advancedSection.classList.add('hidden');
             this.advancedIcon.style.transform = 'rotate(0deg)';
         }
+    }
+
+    resetAssumptionsToDefaults() {
+        // Reset only the advanced assumptions to their default values
+        this.inflationRate.value = 3;
+        this.stockReturn.value = 7;
+        this.bondReturn.value = 4;
+        this.cashReturn.value = 1;
+        
+        // Recalculate with new values
+        this.calculate();
     }
 
     calculate() {
