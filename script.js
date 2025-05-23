@@ -49,6 +49,10 @@ class TomorrowsDollar {
         const currentYear = new Date().getFullYear();
         this.targetYear.value = currentYear + 20;
         this.targetYearSlider.value = currentYear + 20;
+        
+        // Set minimum year to current year for both input and slider
+        this.targetYear.min = currentYear;
+        this.targetYearSlider.min = currentYear;
     }
 
     bindEvents() {
@@ -76,7 +80,8 @@ class TomorrowsDollar {
         });
 
         this.targetYear.addEventListener('input', () => {
-            const value = Math.max(2024, Math.min(2080, parseInt(this.targetYear.value) || new Date().getFullYear() + 20));
+            const currentYear = new Date().getFullYear();
+            const value = Math.max(currentYear, Math.min(2080, parseInt(this.targetYear.value) || currentYear + 20));
             this.targetYear.value = value;
             this.targetYearSlider.value = value;
             this.validateInputs();
