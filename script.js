@@ -164,14 +164,14 @@ class TomorrowsDollar {
         if (stocks + bonds > 100) {
             // Reduce bonds to fit the available space
             const availableForBonds = 100 - stocks;
-            this.bondsPercent.value = Math.max(0, availableForBonds).toFixed(1);
+            this.bondsPercent.value = Math.max(0, Math.round(availableForBonds));
             this.bondsSlider.value = Math.max(0, Math.round(availableForBonds));
             this.cashPercent.value = 0;
             this.cashSlider.value = 0;
         } else {
             // Normal case: cash = 100 - stocks - bonds
             const cash = 100 - stocks - bonds;
-            this.cashPercent.value = Math.max(0, cash).toFixed(1);
+            this.cashPercent.value = Math.max(0, Math.round(cash));
             this.cashSlider.value = Math.max(0, Math.round(cash));
         }
         
@@ -184,7 +184,7 @@ class TomorrowsDollar {
         const cash = parseFloat(this.cashPercent.value) || 0;
         const total = stocks + bonds + cash;
 
-        this.totalAllocation.textContent = total.toFixed(1);
+        this.totalAllocation.textContent = Math.round(total);
 
         if (Math.abs(total - 100) > 0.1) {
             this.allocationError.classList.remove('hidden');
@@ -347,14 +347,14 @@ class TomorrowsDollar {
         if (stocks + bonds > 100) {
             // Reduce stocks to fit the available space
             const availableForStocks = 100 - bonds;
-            this.stocksPercent.value = Math.max(0, availableForStocks).toFixed(1);
+            this.stocksPercent.value = Math.max(0, Math.round(availableForStocks));
             this.stocksSlider.value = Math.max(0, Math.round(availableForStocks));
             this.cashPercent.value = 0;
             this.cashSlider.value = 0;
         } else {
             // Normal case: cash = 100 - stocks - bonds
             const cash = 100 - stocks - bonds;
-            this.cashPercent.value = Math.max(0, cash).toFixed(1);
+            this.cashPercent.value = Math.max(0, Math.round(cash));
             this.cashSlider.value = Math.max(0, Math.round(cash));
         }
         
