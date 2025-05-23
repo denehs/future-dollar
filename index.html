@@ -129,6 +129,113 @@
         input[type="number"] {
             -moz-appearance: textfield;
         }
+
+        /* Easter Egg: Cat and Mouse Animation */
+        .easter-egg-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            pointer-events: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .cat, .mouse {
+            position: absolute;
+            bottom: 10px;
+            font-size: 4rem;
+            opacity: 0;
+        }
+
+        .cat {
+            left: -120px;
+        }
+
+        .mouse {
+            left: -160px;
+        }
+
+        /* Left to Right Animation */
+        @keyframes chaseLeftToRight {
+            0% {
+                left: -160px;
+                opacity: 1;
+            }
+            95% {
+                opacity: 1;
+            }
+            100% {
+                left: calc(100% + 40px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes catChaseLeftToRight {
+            0% {
+                left: -120px;
+                opacity: 1;
+            }
+            95% {
+                opacity: 1;
+            }
+            100% {
+                left: calc(100% + 80px);
+                opacity: 0;
+            }
+        }
+
+        /* Right to Left Animation */
+        @keyframes chaseRightToLeft {
+            0% {
+                right: -160px;
+                left: auto;
+                opacity: 1;
+                transform: scaleX(-1);
+            }
+            95% {
+                opacity: 1;
+            }
+            100% {
+                right: calc(100% + 40px);
+                opacity: 0;
+                transform: scaleX(-1);
+            }
+        }
+
+        @keyframes catChaseRightToLeft {
+            0% {
+                right: -120px;
+                left: auto;
+                opacity: 1;
+                transform: scaleX(-1);
+            }
+            95% {
+                opacity: 1;
+            }
+            100% {
+                right: calc(100% + 80px);
+                opacity: 0;
+                transform: scaleX(-1);
+            }
+        }
+
+        .animate-left-to-right .mouse {
+            animation: chaseLeftToRight 3s ease-in-out;
+        }
+
+        .animate-left-to-right .cat {
+            animation: catChaseLeftToRight 3s ease-in-out 0.3s;
+        }
+
+        .animate-right-to-left .mouse {
+            animation: chaseRightToLeft 3s ease-in-out;
+        }
+
+        .animate-right-to-left .cat {
+            animation: catChaseRightToLeft 3s ease-in-out 0.3s;
+        }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -446,6 +553,12 @@
         <footer class="text-center mt-8 text-sm text-gray-600">
             <p data-translate="disclaimer">This tool provides educational estimates only. Past performance does not guarantee future results. Consult a financial advisor for personalized advice.</p>
         </footer>
+    </div>
+
+    <!-- Easter Egg: Cat and Mouse Animation -->
+    <div class="easter-egg-container" id="easterEggContainer">
+        <div class="mouse">🐭</div>
+        <div class="cat">🐱</div>
     </div>
 
     <!-- JavaScript -->
