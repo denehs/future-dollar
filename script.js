@@ -650,18 +650,75 @@ class EasterEggManager {
         this.easterEggContainer = document.getElementById('easterEggContainer');
         this.isAnimating = false;
         
+        // Get references to input elements and interactive controls
+        this.spendingAmount = document.getElementById('spendingAmount');
+        this.stocksPercent = document.getElementById('stocksPercent');
+        this.bondsPercent = document.getElementById('bondsPercent');
+        this.targetYear = document.getElementById('targetYear');
+        this.inflationRate = document.getElementById('inflationRate');
+        this.stockReturn = document.getElementById('stockReturn');
+        this.bondReturn = document.getElementById('bondReturn');
+        this.cashReturn = document.getElementById('cashReturn');
+        this.stocksSlider = document.getElementById('stocksSlider');
+        this.bondsSlider = document.getElementById('bondsSlider');
+        this.targetYearSlider = document.getElementById('targetYearSlider');
+        this.resetAll = document.getElementById('resetAll');
+        this.resetAssumptions = document.getElementById('resetAssumptions');
+        this.advancedToggle = document.getElementById('advancedToggle');
+        this.languageSelector = document.getElementById('languageSelector');
+        
         this.initEventListeners();
         this.startIdleTimer();
     }
 
     initEventListeners() {
-        // Events that indicate user activity
-        const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click', 'input'];
+        // Events that indicate meaningful user interaction
+        // Only reset timer for actual input/control interactions, not passive browsing
+        const inputElements = [
+            this.spendingAmount,
+            this.stocksPercent,
+            this.bondsPercent,
+            this.targetYear,
+            this.inflationRate,
+            this.stockReturn,
+            this.bondReturn,
+            this.cashReturn,
+            this.stocksSlider,
+            this.bondsSlider,
+            this.targetYearSlider
+        ];
         
-        events.forEach(event => {
-            document.addEventListener(event, () => {
+        // Listen for input changes on form elements
+        inputElements.forEach(element => {
+            if (element) {
+                element.addEventListener('input', () => {
+                    this.resetIdleTimer();
+                });
+            }
+        });
+        
+        // Listen for button clicks (reset buttons, language selector, advanced toggle)
+        const interactiveElements = [
+            this.resetAll,
+            this.resetAssumptions,
+            this.advancedToggle,
+            this.languageSelector
+        ];
+        
+        interactiveElements.forEach(element => {
+            if (element) {
+                element.addEventListener('click', () => {
+                    this.resetIdleTimer();
+                });
+            }
+        });
+        
+        // Listen for meaningful keyboard interactions (when focused on inputs)
+        document.addEventListener('keydown', (e) => {
+            // Only reset if user is typing in an input field
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
                 this.resetIdleTimer();
-            }, true);
+            }
         });
     }
 
