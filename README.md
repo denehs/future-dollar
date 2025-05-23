@@ -1,5 +1,8 @@
 # Tomorrow's Dollar
 
+> **🧪 Vibe Coding Experimentation**  
+> This project was built as a coding experimentation using Vibe Coding techniques - a rapid development approach focused on iterative building and real-time feedback.
+
 A web-based financial planning tool that helps users understand the future value of their current spending decisions.
 
 ## 🎯 Purpose
