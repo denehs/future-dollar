@@ -38,9 +38,9 @@ class TomorrowsDollar {
     }
 
     setDefaults() {
-        // Set default target year to current year + 10
+        // Set default target year to current year + 20
         const currentYear = new Date().getFullYear();
-        this.targetYear.value = currentYear + 10;
+        this.targetYear.value = currentYear + 20;
     }
 
     bindEvents() {
@@ -139,7 +139,7 @@ class TomorrowsDollar {
             const stocksPercent = parseFloat(this.stocksPercent.value) || 0;
             const bondsPercent = parseFloat(this.bondsPercent.value) || 0;
             const cashPercent = parseFloat(this.cashPercent.value) || 0;
-            const targetYear = parseInt(this.targetYear.value) || new Date().getFullYear() + 10;
+            const targetYear = parseInt(this.targetYear.value) || new Date().getFullYear() + 20;
             const inflationRate = parseFloat(this.inflationRate.value) || 3;
             const stockReturn = parseFloat(this.stockReturn.value) || 7;
             const bondReturn = parseFloat(this.bondReturn.value) || 4;
@@ -248,7 +248,7 @@ class TomorrowsDollar {
         this.stocksPercent.value = 75;
         this.bondsPercent.value = 15;
         this.cashPercent.value = 10;
-        this.targetYear.value = new Date().getFullYear() + 10;
+        this.targetYear.value = new Date().getFullYear() + 20;
         this.inflationRate.value = 3;
         this.stockReturn.value = 7;
         this.bondReturn.value = 4;
