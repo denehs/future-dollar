@@ -79,9 +79,28 @@ const translations = {
 // Language management
 class LanguageManager {
     constructor() {
-        this.currentLanguage = localStorage.getItem('language') || 'en';
+        this.currentLanguage = this.getDefaultLanguage();
         this.initLanguageSelector();
         this.applyTranslations();
+    }
+
+    getDefaultLanguage() {
+        // Check if user has previously selected a language
+        const storedLanguage = localStorage.getItem('language');
+        if (storedLanguage) {
+            return storedLanguage;
+        }
+
+        // Detect browser language
+        const browserLanguage = navigator.language || navigator.languages?.[0] || 'en';
+        
+        // If browser language is any Chinese variant, default to Traditional Chinese
+        if (browserLanguage.startsWith('zh')) {
+            return 'zh-TW';
+        }
+        
+        // Default to English for all other languages
+        return 'en';
     }
 
     initLanguageSelector() {
