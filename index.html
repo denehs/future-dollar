@@ -17,6 +17,83 @@
             }
         }
     </script>
+    <style>
+        /* Custom slider styles */
+        .slider-stocks::-webkit-slider-thumb {
+            appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #059669;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .slider-stocks::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #059669;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .slider-stocks {
+            background: linear-gradient(to right, #dcfce7 0%, #059669 100%);
+        }
+        
+        .slider-bonds::-webkit-slider-thumb {
+            appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #2563eb;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .slider-bonds::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #2563eb;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .slider-bonds {
+            background: linear-gradient(to right, #dbeafe 0%, #2563eb 100%);
+        }
+        
+        .slider-cash::-webkit-slider-thumb {
+            appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #6b7280;
+            cursor: not-allowed;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .slider-cash::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #6b7280;
+            cursor: not-allowed;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .slider-cash {
+            background: linear-gradient(to right, #f3f4f6 0%, #6b7280 100%);
+        }
+    </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
     <div class="container mx-auto px-4 py-8 max-w-4xl">
@@ -56,49 +133,90 @@
                     <!-- Asset Allocation -->
                     <div>
                         <h3 class="text-lg font-medium text-gray-900 mb-3">Asset Allocation</h3>
-                        <div class="space-y-3">
+                        <div class="space-y-4">
+                            <!-- Stocks -->
                             <div>
-                                <label for="stocksPercent" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Stocks (%)
-                                </label>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label for="stocksPercent" class="text-sm font-medium text-gray-700">
+                                        Stocks (%)
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        id="stocksPercent" 
+                                        value="75" 
+                                        min="0" 
+                                        max="100" 
+                                        step="0.1"
+                                        class="w-16 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                                    >
+                                </div>
                                 <input 
-                                    type="number" 
-                                    id="stocksPercent" 
+                                    type="range" 
+                                    id="stocksSlider" 
                                     value="75" 
                                     min="0" 
                                     max="100" 
-                                    step="0.1"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    step="1"
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-stocks"
                                 >
                             </div>
+                            
+                            <!-- Bonds -->
                             <div>
-                                <label for="bondsPercent" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Bonds (%)
-                                </label>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label for="bondsPercent" class="text-sm font-medium text-gray-700">
+                                        Bonds (%)
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        id="bondsPercent" 
+                                        value="15" 
+                                        min="0" 
+                                        max="100" 
+                                        step="0.1"
+                                        class="w-16 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                                    >
+                                </div>
                                 <input 
-                                    type="number" 
-                                    id="bondsPercent" 
+                                    type="range" 
+                                    id="bondsSlider" 
                                     value="15" 
                                     min="0" 
                                     max="100" 
-                                    step="0.1"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    step="1"
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-bonds"
                                 >
                             </div>
+                            
+                            <!-- Cash -->
                             <div>
-                                <label for="cashPercent" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Cash (%)
-                                </label>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label for="cashPercent" class="text-sm font-medium text-gray-700">
+                                        Cash (%) <span class="text-xs text-gray-500">- Auto adjusts</span>
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        id="cashPercent" 
+                                        value="10" 
+                                        min="0" 
+                                        max="100" 
+                                        step="0.1"
+                                        class="w-16 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
+                                        readonly
+                                    >
+                                </div>
                                 <input 
-                                    type="number" 
-                                    id="cashPercent" 
+                                    type="range" 
+                                    id="cashSlider" 
                                     value="10" 
                                     min="0" 
                                     max="100" 
-                                    step="0.1"
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    step="1"
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-not-allowed slider-cash opacity-60"
+                                    disabled
                                 >
                             </div>
+                            
                             <div id="allocationError" class="text-red-600 text-sm hidden">
                                 Asset allocation must sum to 100%
                             </div>
