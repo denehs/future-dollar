@@ -26,13 +26,17 @@ Tomorrow's Dollar provides a tangible perspective on the opportunity cost of spe
 
 ## 🚀 Getting Started
 
-### Quick Start
-1. Clone or download this repository
-2. Open `index.html` in any modern web browser
-3. Start exploring different scenarios!
+### Live Demo
+Visit the live application at: https://future-dollar.workers.dev
 
-### No Installation Required
-This is a client-side web application that requires no backend or database. Simply open the HTML file in your browser to start using the tool.
+### Local Development
+1. Clone this repository
+2. Install dependencies: `npm install`
+3. Start development server: `npm run dev`
+4. Open http://localhost:8787 in your browser
+
+### Deployment
+This application is deployed on Cloudflare Workers for global edge performance. See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions.
 
 ## 💡 How to Use
 
@@ -102,9 +106,14 @@ Supports all modern browsers:
 
 ### File Structure
 ```
-├── index.html          # Main application interface
-├── script.js           # Application logic and calculations
+├── assets/             # Static assets directory
+│   ├── index.html      # Main application interface
+│   └── script.js       # Application logic and calculations
+├── worker.js           # Cloudflare Worker script
+├── wrangler.toml       # Cloudflare Worker configuration
+├── package.json        # Node.js dependencies and scripts
 ├── README.md           # Documentation
+├── DEPLOYMENT.md       # Deployment guide
 └── LICENSE             # License information
 ```
 

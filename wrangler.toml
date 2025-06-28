@@ -1,0 +1,46 @@
+name = "future-dollar"
+main = "worker.js"
+compatibility_date = "2024-12-28"
+
+# Account ID (will be set automatically via Git integration)
+# account_id = "your-account-id"
+
+# Enable workers.dev subdomain for Git integration
+workers_dev = true
+
+# Routes configuration (add custom domains after Git integration setup)
+# routes = [
+#   { pattern = "future-dollar.example.com/*", zone_name = "example.com" }
+# ]
+
+# Build configuration
+[build]
+command = ""
+watch_paths = ["worker.js", "assets/index.html", "assets/script.js"]
+
+# Site configuration for serving static files
+[site]
+bucket = "./assets"
+include = ["index.html", "script.js"]
+exclude = []
+
+# Observability configuration
+[observability]
+enabled = true
+
+# Development settings
+[dev]
+port = 8787
+local_protocol = "http"
+
+# Deployment settings
+[env.production]
+name = "future-dollar-production"
+routes = [
+  # Add your custom domain here
+  # { pattern = "future-dollar.example.com", zone_name = "example.com" }
+]
+
+[env.staging]
+name = "future-dollar-staging"
+workers_dev = true

@@ -67,4 +67,9 @@ build/
 
 # Temporary files
 tmp/
-temp/ 
+temp/
+
+# Cloudflare Workers
+.wrangler/
+.dev.vars
+.env.local 

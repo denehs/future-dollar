@@ -2,23 +2,107 @@
 
 This document provides instructions for deploying the Tomorrow's Dollar application to various hosting platforms.
 
-## 🚀 GitHub Pages (Recommended)
+## ⚡ Cloudflare Workers (Recommended)
 
-GitHub Pages is the easiest way to deploy this static web application.
+Cloudflare Workers provides global edge deployment with built-in analytics and excellent performance.
+
+## 🔄 Git Integration Setup (Recommended)
+
+Cloudflare Workers supports direct Git integration for automatic deployments on push.
+
+### Prerequisites:
+- A Cloudflare account (free tier available)
+- GitHub repository with your code
+
+### Setup Steps:
+1. **Go to Cloudflare Dashboard**:
+   - Navigate to https://dash.cloudflare.com
+   - Go to "Workers & Pages"
+
+2. **Create New Worker**:
+   - Click "Create application"
+   - Select "Workers" tab
+   - Click "Create Worker"
+
+3. **Connect GitHub Repository**:
+   - In the worker settings, go to "Settings" tab
+   - Find "Git integration" section
+   - Click "Connect Git repository"
+   - Authorize Cloudflare to access your GitHub account
+   - Select your `future-dollar` repository
+   - Choose the `main` branch for production deployments
+
+4. **Configure Build Settings**:
+   - Build command: (leave empty)
+   - Build output directory: `assets`
+   - Root directory: `/` (project root)
+
+5. **Environment Variables** (if needed):
+   - Add any required environment variables in the dashboard
+
+6. **Deploy**:
+   - Push changes to your main branch
+   - Cloudflare will automatically deploy your worker
+   - Access at: `https://future-dollar.{your-subdomain}.workers.dev`
+
+### Features with Git Integration:
+- **Automatic Deployments**: Every push to main branch triggers deployment
+- **Preview Deployments**: Pull requests get preview URLs
+- **Rollback Support**: Easy rollback to previous deployments
+- **Build Logs**: View deployment logs in the dashboard
+
+## 🛠 Manual Deployment (Alternative)
+
+If you prefer manual deployment using Wrangler CLI:
+
+### Prerequisites:
+- Node.js 16.0.0 or later
+- Wrangler CLI
 
 ### Steps:
-1. **Push to GitHub**: Make sure your code is pushed to a GitHub repository
-2. **Enable GitHub Pages**:
-   - Go to your repository settings
-   - Scroll down to "Pages" section
-   - Select "Deploy from a branch"
-   - Choose "main" branch and "/ (root)" folder
-   - Click "Save"
-3. **Access your app**: Your app will be available at `https://yourusername.github.io/repository-name`
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-### Custom Domain (Optional):
-- Add a `CNAME` file with your domain name
-- Configure DNS settings with your domain provider
+2. **Configure Wrangler**:
+   ```bash
+   npx wrangler login
+   ```
+
+3. **Deploy**:
+   ```bash
+   npm run deploy
+   ```
+
+### Features:
+- **Observability**: Built-in logging and analytics
+- **Performance**: Global edge network with automatic caching
+- **Security**: Automatic HTTPS and security headers
+- **Analytics**: Track usage with Analytics Engine binding
+- **Real-time logs**: Use `npm run tail` to stream logs
+
+### Custom Domain:
+1. Go to your Cloudflare dashboard
+2. Navigate to Workers & Pages
+3. Select your worker
+4. Go to "Custom Domains" tab
+5. Add your domain
+
+### Monitoring:
+- View logs: `npm run tail`
+- Analytics: Available in Cloudflare dashboard
+- Performance metrics: X-Response-Time header on all responses
+
+### Troubleshooting:
+- **Build errors**: Ensure you have the assets directory with your static files
+- **404 errors**: Check that index.html and script.js are in the assets directory
+- **Deployment fails**: Verify you're logged in with `npx wrangler whoami`
+- **Custom domain issues**: Ensure DNS is properly configured in Cloudflare
+
+## 🐙 GitHub Pages
+
+GitHub Pages is a simple option for static hosting.
 
 ## 🌐 Netlify
 

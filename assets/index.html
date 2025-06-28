@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomorrow's Dollar - Financial Planning Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#1e40af',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom slider styles */
+        .slider-stocks::-webkit-slider-thumb {
+            appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #059669;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .slider-stocks::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #059669;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .slider-stocks {
+            background: linear-gradient(to right, #dcfce7 0%, #059669 100%);
+        }
+        
+        .slider-bonds::-webkit-slider-thumb {
+            appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #2563eb;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .slider-bonds::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #2563eb;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .slider-bonds {
+            background: linear-gradient(to right, #dbeafe 0%, #2563eb 100%);
+        }
+        
+        .slider-cash::-webkit-slider-thumb {
+            appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #6b7280;
+            cursor: not-allowed;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .slider-cash::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #6b7280;
+            cursor: not-allowed;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .slider-cash {
+            background: linear-gradient(to right, #f3f4f6 0%, #6b7280 100%);
+        }
+        
+        .slider-year::-webkit-slider-thumb {
+            appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #7c3aed;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .slider-year::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #7c3aed;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .slider-year {
+            background: linear-gradient(to right, #f3e8ff 0%, #7c3aed 100%);
+        }
+        
+        /* Hide number input spinner buttons */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        /* Easter Egg: Cat and Mouse Animation */
+        .easter-egg-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            pointer-events: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .cat, .mouse {
+            position: absolute;
+            bottom: 10px;
+            font-size: 4rem;
+            opacity: 0;
+        }
+
+        .cat {
+            left: -120px;
+        }
+
+        .mouse {
+            left: -160px;
+        }
+
+        /* Left to Right Animation */
+        @keyframes chaseLeftToRight {
+            0% {
+                left: -160px;
+                opacity: 1;
+            }
+            95% {
+                opacity: 1;
+            }
+            100% {
+                left: calc(100% + 40px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes catChaseLeftToRight {
+            0% {
+                left: -120px;
+                opacity: 1;
+            }
+            95% {
+                opacity: 1;
+            }
+            100% {
+                left: calc(100% + 80px);
+                opacity: 0;
+            }
+        }
+
+        /* Right to Left Animation */
+        @keyframes chaseRightToLeft {
+            0% {
+                right: -160px;
+                left: auto;
+                opacity: 1;
+                transform: scaleX(-1);
+            }
+            95% {
+                opacity: 1;
+            }
+            100% {
+                right: calc(100% + 40px);
+                opacity: 0;
+                transform: scaleX(-1);
+            }
+        }
+
+        @keyframes catChaseRightToLeft {
+            0% {
+                right: -120px;
+                left: auto;
+                opacity: 1;
+                transform: scaleX(-1);
+            }
+            95% {
+                opacity: 1;
+            }
+            100% {
+                right: calc(100% + 80px);
+                opacity: 0;
+                transform: scaleX(-1);
+            }
+        }
+
+        .animate-left-to-right .mouse {
+            animation: chaseLeftToRight 3s ease-in-out;
+        }
+
+        .animate-left-to-right .cat {
+            animation: catChaseLeftToRight 3s ease-in-out 0.3s;
+        }
+
+        .animate-right-to-left .mouse {
+            animation: chaseRightToLeft 3s ease-in-out;
+        }
+
+        .animate-right-to-left .cat {
+            animation: catChaseRightToLeft 3s ease-in-out 0.3s;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+        <!-- Header -->
+        <header class="text-center mb-8 relative">
+            <!-- Language Selector -->
+            <div class="absolute top-0 right-0">
+                <select id="languageSelector" class="px-3 py-1 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white">
+                    <option value="en">English (US)</option>
+                    <option value="zh-TW">繁體中文(台灣)</option>
+                </select>
+            </div>
+            
+            <h1 class="text-4xl font-bold text-gray-900 mb-2" data-translate="title">Tomorrow's Dollar</h1>
+            <p class="text-lg text-gray-600" data-translate="subtitle">Understand the future value of your spending decisions</p>
+        </header>
+
+        <!-- Main Application -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <!-- Input Section -->
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Left Column - Inputs -->
+                <div class="space-y-6">
+                    <!-- Spending Amount (Prominent) -->
+                    <div class="bg-blue-50 border-2 border-blue-200 rounded-lg p-4">
+                        <label for="spendingAmount" class="block text-lg font-medium text-gray-900 mb-2" data-translate="spending-amount">
+                            Spending Amount (USD)
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-xl">$</span>
+                            <input 
+                                type="number" 
+                                id="spendingAmount" 
+                                value="100" 
+                                min="0" 
+                                step="1"
+                                class="w-full pl-8 pr-4 py-3 text-xl border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="100"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Asset Allocation -->
+                    <div>
+                        <h3 class="text-lg font-medium text-gray-900 mb-3" data-translate="asset-allocation">Asset Allocation</h3>
+                        <div class="space-y-4">
+                            <!-- Stocks -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label for="stocksPercent" class="text-sm font-medium text-gray-700" data-translate="stocks">
+                                        Stocks (%)
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        id="stocksPercent" 
+                                        value="75" 
+                                        min="0" 
+                                        max="100" 
+                                        step="0.1"
+                                        class="w-16 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                                    >
+                                </div>
+                                <input 
+                                    type="range" 
+                                    id="stocksSlider" 
+                                    value="75" 
+                                    min="0" 
+                                    max="100" 
+                                    step="1"
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-stocks"
+                                >
+                            </div>
+                            
+                            <!-- Bonds -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label for="bondsPercent" class="text-sm font-medium text-gray-700" data-translate="bonds">
+                                        Bonds (%)
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        id="bondsPercent" 
+                                        value="15" 
+                                        min="0" 
+                                        max="100" 
+                                        step="0.1"
+                                        class="w-16 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                                    >
+                                </div>
+                                <input 
+                                    type="range" 
+                                    id="bondsSlider" 
+                                    value="15" 
+                                    min="0" 
+                                    max="100" 
+                                    step="1"
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-bonds"
+                                >
+                            </div>
+                            
+                            <!-- Cash -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label for="cashPercent" class="text-sm font-medium text-gray-700">
+                                        <span data-translate="cash">Cash (%)</span> <span class="text-xs text-gray-500" data-translate="auto-adjusts">- Auto adjusts</span>
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        id="cashPercent" 
+                                        value="10" 
+                                        min="0" 
+                                        max="100" 
+                                        step="0.1"
+                                        class="w-16 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 bg-gray-50"
+                                        readonly
+                                    >
+                                </div>
+                                <input 
+                                    type="range" 
+                                    id="cashSlider" 
+                                    value="10" 
+                                    min="0" 
+                                    max="100" 
+                                    step="1"
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-not-allowed slider-cash opacity-60"
+                                    disabled
+                                >
+                            </div>
+                            
+                            <div id="allocationError" class="text-red-600 text-sm hidden" data-translate="allocation-error">
+                                Asset allocation must sum to 100%
+                            </div>
+                            <div id="allocationSum" class="text-sm text-gray-600">
+                                <span data-translate="total">Total:</span> <span id="totalAllocation">100</span>%
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Target Year -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label for="targetYear" class="text-sm font-medium text-gray-700" data-translate="target-year">
+                                Target Year
+                            </label>
+                            <input 
+                                type="number" 
+                                id="targetYear" 
+                                value="" 
+                                min="2025" 
+                                max="2080"
+                                class="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                        </div>
+                        <input 
+                            type="range" 
+                            id="targetYearSlider" 
+                            value="" 
+                            min="2025" 
+                            max="2080" 
+                            step="1"
+                            class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-year"
+                        >
+                    </div>
+
+                    <!-- Reset All Button -->
+                    <div class="text-center">
+                        <button 
+                            type="button" 
+                            id="resetAll"
+                            class="px-4 py-2 text-sm text-gray-600 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
+                            data-translate="reset-all-defaults"
+                        >
+                            Reset All to Defaults
+                        </button>
+                    </div>
+
+                    <!-- Advanced Assumptions (Collapsible) -->
+                    <div class="border border-gray-200 rounded-lg">
+                        <button 
+                            type="button" 
+                            id="advancedToggle"
+                            class="w-full px-4 py-3 text-left text-sm font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 flex justify-between items-center"
+                        >
+                            <span data-translate="advanced-assumptions">Advanced Assumptions</span>
+                            <svg id="advancedIcon" class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        
+                        <div id="advancedSection" class="hidden p-4 space-y-3 border-t border-gray-200">
+                            <div>
+                                <label for="inflationRate" class="block text-sm font-medium text-gray-700 mb-1" data-translate="inflation-rate">
+                                    Annual Inflation Rate (%)
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="inflationRate" 
+                                    value="3" 
+                                    min="0" 
+                                    max="20" 
+                                    step="0.1"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                >
+                            </div>
+                            <div>
+                                <label for="stockReturn" class="block text-sm font-medium text-gray-700 mb-1" data-translate="stock-return">
+                                    Annual Stock Return (%)
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="stockReturn" 
+                                    value="7" 
+                                    min="-20" 
+                                    max="50" 
+                                    step="0.1"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                >
+                            </div>
+                            <div>
+                                <label for="bondReturn" class="block text-sm font-medium text-gray-700 mb-1" data-translate="bond-return">
+                                    Annual Bond Return (%)
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="bondReturn" 
+                                    value="4" 
+                                    min="-10" 
+                                    max="20" 
+                                    step="0.1"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                >
+                            </div>
+                            <div>
+                                <label for="cashReturn" class="block text-sm font-medium text-gray-700 mb-1" data-translate="cash-return">
+                                    Annual Cash Return (%)
+                                </label>
+                                <input 
+                                    type="number" 
+                                    id="cashReturn" 
+                                    value="1" 
+                                    min="0" 
+                                    max="10" 
+                                    step="0.1"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                >
+                            </div>
+                            
+                            <!-- Reset to Defaults Button -->
+                            <div class="pt-2 border-t border-gray-200">
+                                <button 
+                                    type="button" 
+                                    id="resetAssumptions"
+                                    class="w-full px-3 py-2 text-sm text-gray-600 bg-gray-50 border border-gray-300 rounded-md hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
+                                    data-translate="reset-defaults"
+                                >
+                                    Reset to Defaults
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column - Results -->
+                <div class="space-y-6">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4" data-translate="future-value-calculation">Future Value Calculation</h2>
+                    
+                    <!-- Results Display -->
+                    <div id="resultsSection" class="space-y-4">
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                            <p class="text-gray-700 mb-4">
+                                <span data-translate="if-you-spend">If you spend</span> <strong id="displayAmount">$100</strong> <span data-translate="today">today...</span>
+                            </p>
+                            <p class="text-gray-700 mb-4">
+                                <span data-translate="in-the-year">...in the year</span> <strong id="displayYear">2044</strong> (<strong id="displayYears">20</strong> <span data-translate="years-from-now">years from now), that amount could have grown to approximately:</span>
+                            </p>
+                            
+                            <div class="space-y-3">
+                                <div class="bg-white rounded-lg p-3 border">
+                                    <div class="text-sm text-gray-600 mb-1" data-translate="opportunity-cost-label">Opportunity Cost (in today's dollars, after inflation)</div>
+                                    <div class="text-2xl font-bold text-blue-600" id="realValue">$176.30</div>
+                                </div>
+                                
+                                <div class="bg-white rounded-lg p-3 border">
+                                    <div class="text-sm text-gray-600 mb-1" data-translate="nominal-value-label">Nominal Future Value (without considering inflation)</div>
+                                    <div class="text-2xl font-bold text-green-600" id="nominalValue">$317.22</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Explanation -->
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <h4 class="font-medium text-gray-900 mb-2" data-translate="understanding-results">Understanding Your Results</h4>
+                            <ul class="text-sm text-gray-700 space-y-1">
+                                <li><strong data-translate="opportunity-cost-explanation-label">Opportunity Cost:</strong> <span data-translate="opportunity-cost-explanation">What you're potentially giving up by spending this money today instead of investing it, shown in today's purchasing power after accounting for inflation.</span></li>
+                                <li><strong data-translate="nominal-value-explanation-label">Nominal Value:</strong> <span data-translate="nominal-value-explanation">The raw dollar amount your investment could grow to, not accounting for inflation.</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Investment Summary -->
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h4 class="font-medium text-gray-900 mb-2" data-translate="investment-summary">Investment Summary</h4>
+                            <div class="text-sm text-gray-700 space-y-1">
+                                <div><span data-translate="weighted-average-return">Weighted Average Annual Return:</span> <span id="weightedReturn" class="font-medium">5.95%</span></div>
+                                <div><span data-translate="time-horizon">Time Horizon:</span> <span id="timeHorizon" class="font-medium">20 years</span></div>
+                                <div><span data-translate="inflation-assumption">Inflation Assumption:</span> <span id="inflationAssumption" class="font-medium">3.0%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center mt-8 text-sm text-gray-600">
+            <p data-translate="disclaimer">This tool provides educational estimates only. Past performance does not guarantee future results. Consult a financial advisor for personalized advice.</p>
+        </footer>
+    </div>
+
+    <!-- Easter Egg: Cat and Mouse Animation -->
+    <div class="easter-egg-container" id="easterEggContainer">
+        <div class="mouse">🐭</div>
+        <div class="cat">🐱</div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html> 
